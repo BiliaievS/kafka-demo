@@ -13,8 +13,7 @@ import java.util.Arrays;
 import java.util.Properties;
 
 /**
- * @author Sergii Biliaiev
- * Created on 25/02/2020.
+ * @author Sergii Biliaiev Created on 25/02/2020.
  */
 public class ConsumerDemo {
     private static final Logger logger = LoggerFactory.getLogger(ConsumerDemo.class.getName());
@@ -23,7 +22,7 @@ public class ConsumerDemo {
 
         final String bootstrapServers = "127.0.0.1:9092";
         final String groupId = "my-fourth-application";
-        final String topic = "first_topic";
+        final String topic = "demo_topic";
 
         Properties properties = new Properties();
         properties.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
@@ -33,14 +32,14 @@ public class ConsumerDemo {
         properties.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
         //create consumer
-        KafkaConsumer<String, String> consumer = new KafkaConsumer<String, String>(properties);
+        KafkaConsumer<String, String> consumer = new KafkaConsumer<>(properties);
 //        consumer.subscribe(Collections.singleton(topic));
         consumer.subscribe(Arrays.asList(topic, "second_topic"));
 
         while (true) {
             ConsumerRecords<String, String> consumerRecords = consumer.poll(Duration.ofMillis(100));
             for (ConsumerRecord<String, String> record : consumerRecords) {
-                logger.info("Key: [{}], Value: [{}]", record.key(),record.value());
+                logger.info("Key: [{}], Value: [{}]", record.key(), record.value());
                 logger.info("Partition [{}], Offset [{}]", record.partition(), record.offset());
             }
         }
